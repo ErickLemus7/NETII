@@ -19,13 +19,15 @@ namespace EjemploASP.Controllers
         }
 
         public IActionResult Index()
+
         {
+            ViewBag.Empleado = _context.Empleado.ToList();  //Que es viewBag 
             return View();
         }
 
         public IActionResult Privacy()
         {
-            ViewBag.Empleado = _context.Empleado.ToList();  //Que es viewBag 
+           
             return View();
         }
 
@@ -33,6 +35,16 @@ namespace EjemploASP.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [HttpPost]
+        public IActionResult EnviarFormulario(string nombre, string email)
+        {
+            // 
+
+            // Redirigir a una vista de confirmación o mostrar un mensaje
+            ViewBag.Mensaje = $"Gracias {nombre}, tu formulario ha sido enviado correctamente.";
+            return View("Confirmacion");
         }
     }
 }

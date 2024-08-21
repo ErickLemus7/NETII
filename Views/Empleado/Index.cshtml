@@ -8,15 +8,67 @@
 <div class="text-center">
     <div class="row">
         <div class="col-12-md">
+            <h1>Portal de Empleados</h1>
+            <div class="d-grid gap-2">
+                <button class="btn btn-primary" type="button" id="btn_agregar">Agregar</button>
+
+                <!-- Contenedor del formulario flotante -->
+                <div class="window-notice" id="window-notice" style="display: none;">
+                    <div class="content">
+                        <span class="closeBtn">&times;</span> <!-- Botón de cerrar -->
+                        <div id="formulario_agregar" style="margin-top: 20px;">
+                            <form method="post" action="/Empleado/EnviarFormulario">
+                                <div class="mb-3">
+                                    <label for="nombre">Nombre:</label>
+                                    <input type="text" id="nombre" name="nombre" required><br><br>
+
+                                    <label for="apellido">Apellido:</label>
+                                    <input type="text" id="apellido" name="apellido" required><br><br>
+
+                                    <label for="num_telefono">Número Telefónico:</label>
+                                    <input type="text" id="num_telefono" name="num_telefono" required><br><br>
+
+                                    <label for="dui">Documento de Identidad:</label>
+                                    <input type="text" id="dui" name="dui" required><br><br>
+
+                                    <button class="btn btn-primary" type="submit">Registrar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                @{
+                    ViewData["Title"] = "Confirmación";
+                }
+
+                <h2>@ViewBag.Mensaje</h2>
+            </div>
             <table class="table">
-                <thead class="table-dark">
+                <thead class="table table-striped">
                     <tr>
                         <th scope="col">Nombre</th>
                         <th scope="col">Apellido</th>
-                        <th scope="col">Correo</th>
-                    </tr>
+                        <th scope="col">Telefono</th>
+                        <th scope="col">DUI</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </>
                 </thead>
-
+                <tbody>
+                        @foreach (var employee in ViewBag.Empleado)
+                        {
+                        <tr>
+                            <td>@employee.Nombre</td>
+                            <td>@employee.Apellido </td>
+                            <td>@employee.NumeroTelefonico</td>
+                            <td>@employee.Dui</td>
+                            <td><button type="button" class="btn btn-success" id="btn_editar">Editar</button></td>
+                            <td><button type="button" class="btn btn-danger" id="btn_eliminar">Eliminar</button></td>             
+                        </tr>
+                        } 
+                </tbody>
                 </table>
         </div>
     </div>
