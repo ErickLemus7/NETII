@@ -1,6 +1,7 @@
 using EjemploASP.Data;
 using EjemploASP.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace EjemploASP.Controllers
@@ -21,7 +22,8 @@ namespace EjemploASP.Controllers
         public IActionResult Index()
 
         {
-            ViewBag.Empleado = _context.Empleado.ToList();  //Que es viewBag 
+            ViewBag.Empleado = _context.Empleado.ToList();  //Viewbag Objeto dinamico
+            ViewBag.TipoEmpleado = _context.TipoEmpleado.ToList();
             return View();
         }
 
@@ -38,13 +40,59 @@ namespace EjemploASP.Controllers
         }
 
         [HttpPost]
-        public IActionResult EnviarFormulario(string nombre, string email)
+        public IActionResult EnviarFormulario(
+            string nombre,string apellido,string dui,string numeroTelefonico, int tipoEmpleadoID)  
         {
-            // 
+            var empleado = new Empleado
+            {
+                Nombre = nombre,
+                Apellido = apellido,
+                NumeroTelefonico = numeroTelefonico,
+                Dui = dui,
+                TipoEmpleadoId = tipoEmpleadoID
 
-            // Redirigir a una vista de confirmación o mostrar un mensaje
-            ViewBag.Mensaje = $"Gracias {nombre}, tu formulario ha sido enviado correctamente.";
-            return View("Confirmacion");
+            };
+            _context.Empleado.Add(empleado);
+            _context.SaveChanges();           
+            Thread.Sleep(2000);
+            // Redirigir a la vista Index para mostrar la lista actualizada de empleados
+            return RedirectToAction("Index");
+
         }
+        [HttpPost]
+        public IActionResult DeleteEmployee(int id)
+        {
+            var empleado = _context.Empleado.FirstOrDefault(e => e.Id == id);
+            if (empleado != null)
+            {
+                _context.Empleado.Remove(empleado);
+                _context.SaveChanges();
+                return Json(new { success = true });
+            }
+
+            return Json(new { success = false });
+        }
+
+        [HttpPost]
+        public IActionResult EditarEmpleado(Empleado empleado)
+        {
+            var empleadoExistente = _context.Empleado.Find(empleado.Id);
+            if (empleadoExistente != null)
+            {
+                empleadoExistente.Nombre = empleado.Nombre;
+                empleadoExistente.Apellido = empleado.Apellido;
+                empleadoExistente.NumeroTelefonico = empleado.NumeroTelefonico;
+                empleadoExistente.Dui = empleado.Dui;
+
+                _context.SaveChanges();
+                TempData["AddSuccess"] = true;
+                Thread.Sleep(2000);
+                return RedirectToAction("Index");
+            }
+
+            TempData["AddSuccess"] = false;
+            return View(empleado);
+        }
+
     }
 }
