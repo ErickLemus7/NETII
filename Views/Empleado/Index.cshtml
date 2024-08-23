@@ -1,49 +1,93 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
     ViewData["Title"] = "Empleado";
+    var tipoEmpleadoList = ViewBag.TipoEmpleado as List<EjemploASP.Models.TipoEmpleado>;
+    var mensaje = ViewBag.Mensaje as string;
+    var estado = ViewBag.Estado as string;
 }
 
-<div class="text-center">
-    <div class="row">
-        <div class="col-12-md">
-            <h1>Portal de Empleados</h1>
-            <div class="d-grid gap-2">
-                <button class="btn btn-primary" type="button" id="btn_agregar">Agregar</button>
+    <div class="text-center">
+        <div class="row">
+            <div class="col-12-md">
+                <h1>Portal de Empleados</h1>
+                <div class="d-grid gap-2">
+                    <button class="btn btn-primary" type="button" id="btn_agregar">Agregar</button>
 
-                <!-- Contenedor del formulario flotante -->
-                <div class="window-notice" id="window-notice" style="display: none;">
-                    <div class="content">
-                        <span class="closeBtn">&times;</span> <!-- Botón de cerrar -->
-                        <div id="formulario_agregar" style="margin-top: 20px;">
-                            <form method="post" action="/Empleado/EnviarFormulario">
-                                <div class="mb-3">
-                                    <label for="nombre">Nombre:</label>
-                                    <input type="text" id="nombre" name="nombre" required><br><br>
+                    <!-- Contenedor del formulario flotante -->
+                    <div class="window-notice" id="window-notice" style="display: none;">
+                        <div class="content">
+                            <span class="closeBtn">&times;</span> <!-- Botón de cerrar -->
+                            <div id="formulario_agregar" style="margin-top: 20px;">
+                                <form method="post" action="/Empleado/EnviarFormulario">
+                                    <div class="mb-3">
+                                        <b><label for="nombre">Nombre:</label></b>
+                                        <input type="text" id="nombre" name="nombre" class="form-control" required><br><br>
 
-                                    <label for="apellido">Apellido:</label>
-                                    <input type="text" id="apellido" name="apellido" required><br><br>
+                                        <b><label for="apellido">Apellido:</label></b>
+                                        <input type="text" id="apellido" name="apellido" class="form-control" required><br><br>
 
-                                    <label for="num_telefono">Número Telefónico:</label>
-                                    <input type="text" id="num_telefono" name="num_telefono" required><br><br>
+                                        <b><label for="numeroTelefonico">Número Telefónico:</label></b>
+                                        <input type="text" id="numeroTelefonico" name="numeroTelefonico" class="form-control" required><br><br>
 
-                                    <label for="dui">Documento de Identidad:</label>
-                                    <input type="text" id="dui" name="dui" required><br><br>
+                                        <b><label for="dui">Documento de Identidad:</label></b>
+                                        <input type="text" id="dui" name="dui" class="form-control" required><br><br>
 
-                                </div>
-                                    <button class="btn btn-primary" type="submit">Registrar</button>
-                                </div>
-                            </form>
+                                        <b><label for="idTipoEmpleado">Tipo de empleado:</label></b>
+                                        <select id="tipoEmpleado" name="TipoEmpleadoId" class="form-control" required>
+                                            @foreach (var tipo in ViewBag.TipoEmpleado as List<EjemploASP.Models.TipoEmpleado>)
+                                            {
+                                                <option value="@tipo.Id">@tipo.Nombre</option>
+                                            }
+                                        </select>
+                                        <br><br>
+
+                                    </div>
+                                    <button id="btn_agregarUser" class="btn btn-primary" type="submit">Registrar</button>
+
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+                @model EjemploASP.Models.Empleado
 
                 @{
-                    ViewData["Title"] = "Confirmación";
+                    ViewData["Title"] = "Formulario Enviado";
                 }
-
+                <div id="editModal" class="modal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Editar Empleado</h5>
+                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="editForm" method="post" action="/Empleado/EditarEmpleado">
+                                    <input type="hidden" id="edit-id" name="Id">
+                                    <div class="mb-3">
+                                        <label for="edit-nombre">Nombre</label>
+                                        <input type="text" id="edit-nombre" name="Nombre" class="form-control" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="edit-apellido">Apellido</label>
+                                        <input type="text" id="edit-apellido" name="Apellido" class="form-control" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="edit-telefono">Número Telefónico</label>
+                                        <input type="text" id="edit-telefono" name="NumeroTelefonico" class="form-control" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="edit-dui">DUI</label>
+                                        <input type="text" id="edit-dui" name="Dui" class="form-control" required>
+                                    </div>
+                                <button type="submit" id="btn_guardar" class="btn btn-primary">Guardar Cambios</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="editNotification" data-edit-success="@TempData["EditSuccess"]"></div>
                 <h2>@ViewBag.Mensaje</h2>
             </div>
             <table class="table">
@@ -53,24 +97,35 @@
                         <th scope="col">Apellido</th>
                         <th scope="col">Telefono</th>
                         <th scope="col">DUI</th>
+                        <th scope="col">Tipo de Empleado</th>
                         <th scope="col"></th>
                         <th scope="col"></th>
-                    </>
+                        </>
                 </thead>
                 <tbody>
-                        @foreach (var employee in ViewBag.Empleado)
-                        {
+                    @foreach (var employee in ViewBag.Empleado)
+                    {
                         <tr>
                             <td>@employee.Nombre</td>
                             <td>@employee.Apellido </td>
                             <td>@employee.NumeroTelefonico</td>
                             <td>@employee.Dui</td>
-                            <td><button type="button" class="btn btn-success" id="btn_editar">Editar</button></td>
-                            <td><button type="button" class="btn btn-danger" id="btn_eliminar">Eliminar</button></td>             
+                            <td>@employee.TipoEmpleado?.Nombre</td>
+                            <td>
+                                <button type="button" class="btn btn-success btn-editar" data-id="@employee.Id" data-nombre="@employee.Nombre"
+                                        data-apellido="@employee.Apellido" data-telefono="@employee.NumeroTelefonico" data-dui="@employee.Dui">
+                                    Editar
+                                </button>
+                            </td>
+                            <td><button type="button" class="btn btn-danger btn_eliminar" data-id="@employee.Id">Eliminar</button></td>
                         </tr>
-                        } 
+                    }
                 </tbody>
-                </table>
+            </table>
+
         </div>
     </div>
-</div>
+    @if (TempData["EditSuccess"] != null)
+    {
+        <div id="editNotification" data-edit-success="@TempData["EditSuccess"]"></div>
+    }
