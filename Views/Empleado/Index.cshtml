@@ -5,7 +5,6 @@
     var estado = ViewBag.Estado as string;
 //LH202201
 }
-
     <div class="text-center">
         <div class="row">
             <div class="col-12-md">
@@ -91,7 +90,7 @@
                 <div id="editNotification" data-edit-success="@TempData["EditSuccess"]"></div>
                 <h2>@ViewBag.Mensaje</h2>
             </div>
-            <table class="table">
+            <table class="table" id="table_empleado">
                 <thead class="table table-striped">
                     <tr>
                         <th scope="col">Nombre</th>

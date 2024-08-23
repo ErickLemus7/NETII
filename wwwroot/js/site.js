@@ -1,4 +1,13 @@
-﻿$('#btn_guardar').click(function () {
+﻿$(document).ready(function () {
+    // Inicializar DataTables 
+    $('#table_empleado').DataTable({
+        "language": {
+            url: '//cdn.datatables.net/plug-ins/2.1.4/i18n/es-ES.json',
+        },
+    });
+});
+
+$('#btn_guardar').click(function () {
     // Cierra el modal al guardar los datos
     $('#editModal').modal('hide');
 
