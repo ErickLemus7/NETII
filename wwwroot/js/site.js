@@ -2,7 +2,7 @@
     // Cierra el modal al guardar los datos
     $('#editModal').modal('hide');
 
-    // Mostrar la alerta de éxito
+    // Mostrar la alerta de exito
     Swal.fire({
         title: '¡Éxito!',
         text: 'Se guardó de la manera correcta',
@@ -34,7 +34,7 @@ $('#btn_agregarUser').click(function () {
         });
     } else {
         // Cierrar modal y guardar los datos
-        $('#window-notice').hide();  // Cambiar el selector según el ID del modal
+        $('#window-notice').hide();  // Cambiar el selector segun el ID del modal
         $('.modal-backdrop').remove();
 
         // Mostrar la alerta 
@@ -119,7 +119,7 @@ document.querySelector(".closeBtn").addEventListener("click", function () {
     document.getElementById("window-notice").style.display = "none";
 });
 
-// Cerrar el modal al hacer clic fuera del formulario
+// Cerrar el modal al hacer clic fuera del form
 window.onclick = function (event) {
     var modal = document.getElementById("window-notice");
     if (event.target == modal) {
